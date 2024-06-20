@@ -1,12 +1,20 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from imblearn.over_sampling import SMOTE
-from sklearn.neural_network import MLPClassifier
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+import warnings
 
-# Cargar el dataset
-df = pd.read_csv("data/Merged_Dataset.csv")
+import pandas as pd
+from imblearn.over_sampling import SMOTE
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import StandardScaler
+
+FOLD_NUMBER = 10
+RANDOM_STATE = 23
+METRIC_LIST = ["Accuracy", "F1", "Kappa", "Precision", "Recall"]
+warnings.filterwarnings('ignore')
+pd.options.display.max_columns = None
+pd.options.display.max_rows = None
+df = pd.read_csv("../data/Merged_Dataset.csv")
 
 # Separar características y etiqueta
 X = df.drop(columns=['Address', 'Flag'])
@@ -23,26 +31,34 @@ X_train_resampled, y_train_resampled = smote.fit_resample(X_train, y_train)
 X_train_resampled = X_train_resampled.fillna(X_train_resampled.mean())
 X_test = X_test.fillna(X_test.mean())
 
-# Inicializar el modelo MLP
-mlp_params = {
-    'hidden_layer_sizes': (100, 100, 10),  # Puedes ajustar el número y tamaño de las capas ocultas
-    'activation': 'relu',
-    'solver': 'adam',
-    'random_state': 42,
-    'max_iter': 300
-}
-mlp_model = MLPClassifier(**mlp_params)
-
 # Estandarizar los datos
 scaler = StandardScaler().fit(X_train_resampled)
 X_train_resampled = scaler.transform(X_train_resampled)
 X_test = scaler.transform(X_test)
 
-# Entrenar el modelo
-mlp_model.fit(X_train_resampled, y_train_resampled)
+# Inicializar el modelo KNN
+knn_model = KNeighborsClassifier()
 
-# Predecir en el conjunto de prueba
-y_pred = mlp_model.predict(X_test)
+# Definir el rango de valores de k a probar
+param_grid = {
+    'n_neighbors': range(1, 31),
+    'weights': ['uniform', 'distance'],
+    'algorithm': ['auto']
+}
+
+# Configurar el GridSearchCV
+grid_search = GridSearchCV(knn_model, param_grid, cv=FOLD_NUMBER, scoring='accuracy', n_jobs=-1)
+
+# Entrenar el modelo con GridSearchCV
+grid_search.fit(X_train_resampled, y_train_resampled)
+
+# Obtener el mejor modelo y sus parámetros
+best_knn_model = grid_search.best_estimator_
+print(f"Best K: {grid_search.best_params_['n_neighbors']}")
+print(f"Best Parameters: {grid_search.best_params_}")
+
+# Predecir en el conjunto de prueba con el mejor modelo encontrado
+y_pred = best_knn_model.predict(X_test)
 
 # Calcular las métricas
 accuracy = accuracy_score(y_test, y_pred)

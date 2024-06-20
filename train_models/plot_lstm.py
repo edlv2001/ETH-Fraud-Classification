@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
-from sklearn.metrics import roc_curve, auc
 import numpy as np
+from sklearn.metrics import roc_curve, auc
 
 true_negative = 2804
 false_positive = 122

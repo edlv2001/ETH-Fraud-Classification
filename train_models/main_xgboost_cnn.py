@@ -1,17 +1,16 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from imblearn.over_sampling import SMOTE
-from xgboost import XGBClassifier
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-import numpy as np
 import tensorflow as tf
-from keras.src.models import Sequential
+from imblearn.over_sampling import SMOTE
 from keras.src.layers import Dense, Dropout
+from keras.src.models import Sequential
 from keras.src.optimizers import Adam
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from xgboost import XGBClassifier
 
 # Load the dataset
-df = pd.read_csv("./data/Merged_Dataset.csv")
+df = pd.read_csv("../data/Merged_Dataset.csv")
 
 
 # Separate features and labels

@@ -1,17 +1,16 @@
-import pandas as pd
-from keras.src.callbacks import ModelCheckpoint
-from sklearn.model_selection import train_test_split
-from imblearn.over_sampling import SMOTE
-from sklearn.preprocessing import StandardScaler, PowerTransformer
 import numpy as np
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
-import tensorflow as tf
-from keras.src.models import Sequential
+import pandas as pd
+from imblearn.over_sampling import SMOTE
+from keras.src.callbacks import ModelCheckpoint
 from keras.src.layers import Conv2D, Flatten, Dense, BatchNormalization, MaxPooling2D
+from keras.src.models import Sequential
 from keras.src.optimizers import Adam
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import PowerTransformer
 
 # Cargar el dataset
-df = pd.read_csv("data/Merged_Dataset.csv")
+df = pd.read_csv("../data/Merged_Dataset.csv")
 
 # Separar características y etiqueta
 X = df.drop(columns=['Address', 'Flag'])
@@ -170,7 +169,7 @@ X_test_reshaped = X_test.reshape(-1, input_shape[0], 1, 1)
 
 final_model = create_model((input_shape[0], 1, 1), best_solution)
 if final_model is not None:
-    checkpoint = ModelCheckpoint('best_model.keras', monitor='val_loss', save_best_only=True, mode='min', verbose=1)
+    checkpoint = ModelCheckpoint('../best_model.keras', monitor='val_loss', save_best_only=True, mode='min', verbose=1)
     final_model.fit(X_train_reshaped, y_train_resampled, epochs=50, batch_size=32,
                     validation_data=(X_test_reshaped, y_test), callbacks=[checkpoint])
 

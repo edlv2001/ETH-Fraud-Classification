@@ -1,11 +1,11 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
 from imblearn.over_sampling import SMOTE
-from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-from tensorflow.keras import Sequential, layers
-from tensorflow.keras.constraints import MaxNorm
-from tensorflow.keras.metrics import Precision, Recall
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from keras.src import Sequential, layers
+from keras.src.constraints import MaxNorm
+from keras.src.metrics import Precision, Recall
 
 
 # Definir el compilador del modelo MLP
@@ -28,7 +28,7 @@ def compile_mlp(input_dim, H, num_epochs, num_layers, activation, dropout_probab
 
 
 # Cargar el dataset
-df = pd.read_csv("data/Merged_Dataset.csv")
+df = pd.read_csv("../data/Merged_Dataset.csv")
 
 # Separar características y etiqueta
 X = df.drop(columns=['Address', 'Flag'])

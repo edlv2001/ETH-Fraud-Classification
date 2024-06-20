@@ -1,19 +1,12 @@
-import os
-import math
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
 import warnings
+
+import numpy as np
+import pandas as pd
 from imblearn.over_sampling import SMOTE
-from sklearn.model_selection import train_test_split, KFold
-from sklearn.tree import plot_tree
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
-from pycm import ConfusionMatrix, Compare
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 FOLD_NUMBER = 10
 RANDOM_STATE = 23
@@ -21,7 +14,7 @@ METRIC_LIST = ["Accuracy", "F1", "Kappa", "Precision", "Recall"]
 warnings.filterwarnings('ignore')
 pd.options.display.max_columns = None
 pd.options.display.max_rows = None
-df = pd.read_csv("data/Merged_Dataset.csv")
+df = pd.read_csv("../data/Merged_Dataset.csv")
 
 # Separar características y etiqueta
 X = df.drop(columns=['Address', 'Flag'])
